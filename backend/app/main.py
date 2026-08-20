@@ -35,7 +35,7 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
-app.include_router(jobs.router)
-app.include_router(resumes.router)
-app.include_router(screening.router)
-app.include_router(bulk.router)
+app.include_router(jobs.router, prefix="/api")
+app.include_router(resumes.router, prefix="/api")
+app.include_router(screening.router, prefix="/api")
+app.include_router(bulk.router, prefix="/api")
