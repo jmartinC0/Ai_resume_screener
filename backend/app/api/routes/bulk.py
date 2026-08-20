@@ -1,3 +1,4 @@
+import asyncio
 import uuid
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -54,7 +55,13 @@ async def bulk_screen(
             continue
         parsed_files.append({"filename": filename, "content": content, "extension": ext})
 
-    outcome = process_bulk_upload(job, parsed_files)
+    try:
+        outcome = await asyncio.wait_for(
+            asyncio.to_thread(process_bulk_upload, job, parsed_files),
+            timeout=120.0,
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Bulk screening timed out. Try fewer resumes at once.")
 
     for parsed in outcome["parsed_resumes"]:
         resume = Resume(
