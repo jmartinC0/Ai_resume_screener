@@ -58,7 +58,7 @@ async def bulk_screen(
     try:
         outcome = await asyncio.wait_for(
             asyncio.to_thread(process_bulk_upload, job, parsed_files),
-            timeout=120.0,
+            timeout=45.0,
         )
     except asyncio.TimeoutError:
         raise HTTPException(status_code=504, detail="Bulk screening timed out. Try fewer resumes at once.")
